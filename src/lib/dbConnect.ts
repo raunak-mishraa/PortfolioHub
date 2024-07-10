@@ -6,7 +6,7 @@ type ConnectionObject = {
 
 const connection: ConnectionObject = {};
 
-export const dbConnect = async () => {
+const dbConnect = async ():Promise<void> => {
     if(connection.isConnected){
         console.log("Database is already connected");
         return;
@@ -21,3 +21,5 @@ export const dbConnect = async () => {
         process.exit(1);
     }
 }
+
+export default dbConnect;
