@@ -7,16 +7,16 @@ import UserModel from "./models/userModel"
 import bcrypt from "bcryptjs"
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
-    GoogleProvider({
-        clientId: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    }),
-    GithubProvider({
-        clientId: process.env.GITHUB_CLIENT_ID,
-        clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    }),
+    // GoogleProvider({
+    //     clientId: process.env.GOOGLE_CLIENT_ID,
+    //     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    // }),
+    // GithubProvider({
+    //     clientId: process.env.GITHUB_CLIENT_ID,
+    //     clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    // }),
     CredentialProvider({
-        name:"Credentials",
+        name:"credentials",
         credentials:{
             email: {label: "Email", type: "email"},
             password: {label: "Password", type: "password"}
@@ -25,6 +25,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             await dbConnect();
             try {
                 const { email, password } = credentials;
+                console.log("creade",credentials)
                 if (!email || !password) {
                     throw new CredentialsSignin("Please enter your email and password");
                 }
@@ -33,7 +34,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                         {email: credentials.email},
                         {username: credentials.username}
                     ]
-                });
+                }).select("+password");
                 if (!user) {
                     throw new CredentialsSignin('No user found with this email or username')
                   }
@@ -42,15 +43,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 }
                 const isPasswordCorrect = await bcrypt.compare(credentials.password,
                     user.password);
-                if (!isPasswordCorrect) {
-                    throw new CredentialsSignin('Incorrect password')
-                }else{
-                    return user;
+                if (isPasswordCorrect) {
+                  return user;
+                } else {
+                  throw new CredentialsSignin('Incorrect password')
                 }
+                // return {email: user.email, username: user.username, id: user._id}
             } catch (error:any) {
                 throw new Error(error);
             }
         }
     })
   ],
+  pages: {
+    signIn:'/signin',
+  }
 })
