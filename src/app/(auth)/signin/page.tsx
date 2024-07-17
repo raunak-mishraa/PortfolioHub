@@ -2,18 +2,21 @@ import Input from "@/components/Input"
 import Section from "@/components/Section"
 import Image from "next/image"
 import Link from "next/link"
-import logo from "../../../../public/logo.svg"
+import mlogo from "../../../../public/mlogo.svg"
 import google from '../../../../public/google.svg'
 import github from '../../../../public/github.svg'
 import grid from '../../../../public/grid.svg'
 function page() {
   return (
-    <Section className="py-32 relative h-svh dark:bg-grid-white/[0.02]">
+    <Section className="py-32 h-svh dark:bg-grid-white/[0.02]">
      
       <div className='flex items-center justify-center'>
         <div className='flex flex-col items-center'>
           {/* <h1 className='h6 text-center mb-6'>CodeScroll</h1> */}
-          <Image height={30} src={logo} alt='Logo'className='mb-6' />
+          <div className='flex items-center gap-x-2 mb-4'>
+            <Image height={'25'} src={mlogo} alt='Logo' />
+            <h1 className='h5 font-bold'>SignIn</h1>
+          </div>
           <div className='w-96 border border-n-6 rounded-lg bg-n-7 lg:backdrop-blur-sm px-8 py-6 '>
           <form className="space-y-3" action="">
            <div>

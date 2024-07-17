@@ -1,6 +1,6 @@
 import Section from '@/components/Section'
 import Input from '@/components/Input'
-import logo from '../../../../public/logo.svg'
+import mlogo from '../../../../public/mlogo.svg'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -9,7 +9,10 @@ function page() {
     <Section className="py-32 dark:bg-grid-white/[0.02]">
       <div className='flex items-center justify-center '>
         <div className='flex flex-col items-center'>
-          <Image height={'30'} src={logo} alt='Logo'className='mb-6' />
+          <div className='flex items-center gap-x-2 mb-4'>
+            <Image height={'25'} src={mlogo} alt='Logo' />
+            <h1 className='h5 font-bold'>SignUp</h1>
+          </div>
           {/* <h1 className='h6 text-center mb-6'>CodeScroll</h1> */}
           <form className='w-96 border border-n-6 rounded-lg bg-n-7 lg:backdrop-blur-sm px-8 py-6 space-y-3' action="">
            <div>

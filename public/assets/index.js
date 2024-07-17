@@ -1,5 +1,4 @@
 import check from "./check.svg";
-import play from "./play.svg";
 import grid from "./grid.png";
 import curve from "./hero/curve.png";
 import curve1 from "./collaboration/curve-1.svg";
@@ -21,7 +20,6 @@ import linkedin from "./socials/linkedin.svg";
 import youtube from "./socials/youtube.svg";
 export {
   check,
-  play,
   grid,
   curve,
   curve1,
