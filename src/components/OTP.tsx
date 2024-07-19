@@ -37,17 +37,21 @@ function OTP({ length, onChangeOTP }: OTPProps) {
     onChangeOTP(newOtp.join(""));
   };
 
-  const handleOnKeyDown = (e:React.KeyboardEvent<HTMLInputElement>, index:number) => {
-    // const element = e.target;
-    const newOtp = [...otp];
-    newOtp[index] = "";
-    setOtp(newOtp);
-    if(index > 0) {
-      // element.previousElementSibling?.focus();
-      refs[index - 1].current.focus();
+  const handleOnKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (e.key === "Backspace") {
+      
+      if (index > 0 && otp[index] === "") {
+        refs[index - 1].current.focus();
+        const newOtp = [...otp];
+        newOtp[index] = "";
+        setOtp(newOtp);
+        onChangeOTP(newOtp.join(""));
+      }
     }
-    onChangeOTP(newOtp.join(""));
-  }
+  };
   return (
    <>
         <div className="flex items-center justify-center gap-3">
@@ -61,9 +65,7 @@ function OTP({ length, onChangeOTP }: OTPProps) {
                 key={index}
                 ref={refs[index]}
                 onChange={(e) => handleChange(e, index)}
-                onKeyDown={(e) => {
-                  if(e.key === "Backspace") handleOnKeyDown(e, index)
-                  }}
+                onKeyDown={(e) => handleOnKeyDown(e, index)}
               />
             );
           })}

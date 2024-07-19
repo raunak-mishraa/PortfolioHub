@@ -1,4 +1,3 @@
-// export { auth as middleware } from "@/auth"
 import { NextResponse, NextRequest } from 'next/server'
  
 // This function can be marked `async` if using `await` inside

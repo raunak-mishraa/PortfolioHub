@@ -1,14 +1,23 @@
-import UserModel from "@/models/userModel";
+import UserModel from "@/models/user.model";
 import dbConnect from "@/lib/dbConnect";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { sendVerificationEmail } from "@/helper/sendVerificationEmail";
+import { signUpSchema } from "@/schemas/signUpSchema";
 
 export async function POST(request: NextRequest) {
     await dbConnect();
     try {
-        const { username, fullName, email, password } = await request.json();
-        
+        const body:unknown = await request.json();
+        const result = signUpSchema.safeParse(body);
+        if (!result.success) {
+            return NextResponse.json({
+                success: false,
+                message: result.error.errors[0].message,
+            }, { status: 400 });
+        }
+        // console.log(result.data);
+        const { username, fullName, email, password } = result.data;
         const existingVerifiedUserByUsername = await UserModel.findOne({
             username,
             isVerified: true

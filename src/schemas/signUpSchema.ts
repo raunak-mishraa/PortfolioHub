@@ -9,6 +9,9 @@ export const usernameValidation = z
 
 export const signUpSchema = z.object({
   username: usernameValidation,
+  fullName: z.string().min(2, {message: "Full name must be at least 2 characters"}).max(50, {message: "Full name must be no more than 30 characters"}),
   email: z.string().email({message: "Invalid email address"}),
   password: z.string().min(6, {message: "Password must be at least 6 characters"}),
 });
+
+export const signInSchema = z.object({}).merge(signUpSchema.pick({email: true, password: true}));

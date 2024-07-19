@@ -3,6 +3,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Toaster } from "react-hot-toast";
+import AuthProvider from "@/context/AuthProvider";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,11 +21,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
+      <AuthProvider>
       <body className={`${inter.className} selection:text-n-8 selection:bg-color-1`}>
-      <Navbar/>
-        {children}
-      <Footer/>
+        <Navbar/>
+        <Toaster position="bottom-right" />
+          {children}
+        <Footer/>
       </body>
+      </AuthProvider>
     </html>
   );
 }

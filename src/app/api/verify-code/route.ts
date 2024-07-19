@@ -2,10 +2,11 @@ import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
     await dbConnect();
     try {
         const { username, code } = await request.json();
+        console.log(username, code)
         const user = await UserModel.findOne({ username });
         if (!user) {
             return NextResponse.json(
