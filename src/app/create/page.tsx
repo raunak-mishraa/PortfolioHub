@@ -4,20 +4,22 @@ import { data } from "@/helper/data";
 import TagsInput from "@/components/TagsInput";
 import axios from "axios";
 import { LuLoader2 } from "react-icons/lu";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 function Page() {
   const categories = data[0]?.datas;
   const [image, setImage] = React.useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [error, setError] = React.useState("");
   const [projectData, setProjectData] = React.useState({
     liveUrl: "",
     githubUrl: "",
     image: "",
     stack: [''],
-    category: "",
+    category: "Portfolio",
   });
 
+  const router = useRouter();
 
   const selected = useCallback(
     (tags: string[]) => {
@@ -50,12 +52,16 @@ function Page() {
       formData.append("category", projectData.category);
 
       if (!projectData.liveUrl || !projectData.githubUrl || !projectData.category || !image || projectData.stack.length === 0) {
-        setError("All fields are required");
+        toast.error("All fields are required");
         return;
       }
 
       const response = await axios.post("/api/create-project", formData)
-      console.log(response.data)
+      console.log(response.status)
+      if(response.status === 200){
+        toast.success(response.data.message);
+        router.push("/developer-profile");
+      }
     } catch (error: any) {
       console.error(error.message);
     } finally {

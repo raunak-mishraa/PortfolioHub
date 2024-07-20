@@ -11,7 +11,6 @@ export async function middleware(request: NextRequest) {
     if(token && publicPaths){
         return NextResponse.redirect(new URL('/developer-profile', request.nextUrl))
     }
-
     if(!token && !publicPaths){
         return NextResponse.redirect(new URL('/signin', request.nextUrl))
     }
