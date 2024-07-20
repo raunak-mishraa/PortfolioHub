@@ -11,7 +11,6 @@ function page() {
   const { data: session, status } = useSession();
   console.log(session)
   const avatar = session?.user.image ?? test;
-  // console.log(avatar)
   return (
     <div className='py-32 px-10 container'>
 
@@ -26,10 +25,10 @@ function page() {
               alt='avatar' 
               className='w-full h-full rounded-full object-cover'/>
           </div>
-          <div className='-m-0.5'>
+          <div className='m-1'>
             <Image src={profie_line} alt='vector' className='animate-pulse'/>
           </div>
-          <div>{session?.user.name}</div>
+          <div>{session?.user.username}</div>
           <div className='flex gap-x-12'>
             <div className='w-10 h-10 border flex items-center justify-center rounded-full border-n-5'>
             <FaLinkedinIn className='text-[#757185]'/>

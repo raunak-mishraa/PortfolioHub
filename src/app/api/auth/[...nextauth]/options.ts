@@ -57,6 +57,66 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
+    // async signIn({user, account}:{user: any, account: any}) {
+    //   if(account.provider === 'google' || account.provider === 'github'){
+    //     try {
+    //       const {email, name} = user;
+    //       console.log(user);
+    //       await dbConnect();
+    //       const isUserExists = await UserModel.findOne({email});
+    //       console.log(isUserExists, "isUserExists");
+    //       if(isUserExists){
+    //         return isUserExists;
+    //       }
+    //       const newUser = new UserModel({
+    //         email,
+    //         fullName: name,
+    //         isVerified: true,
+    //       });
+    //       const res = await newUser.save();
+    //       console.log(res, "res");
+    //       if(res){
+    //         return user;
+    //       }
+    //     } catch (error) {
+    //       console.error(error);
+    //     }
+    //   }
+    //   // return user;
+    // },
+    async signIn({ user, account }: { user: any; account: any }) {
+      if (account.provider === 'google' || account.provider === 'github') {
+        try {
+          const { email } = user;
+          await dbConnect();
+          const dbUser = await UserModel.findOne({ email });
+          
+          if (dbUser) {
+            user._id = dbUser._id;
+            user.isVerified = dbUser.isVerified;
+            user.username = dbUser.username;
+            return true;
+          } else {
+            const newUser = new UserModel({
+              email,
+              fullName: user.name,
+              isVerified: true,
+            });
+            const res = await newUser.save();
+            if (res) {
+              user._id = res._id;
+              user.isVerified = res.isVerified;
+              user.username = res.username;
+              return true;
+            }
+          }
+        } catch (error) {
+          console.error(error);
+          return false;
+        }
+      }
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token._id = user._id?.toString(); 

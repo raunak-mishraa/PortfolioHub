@@ -1,18 +1,83 @@
-import React from "react";
+"use client";
+import React, { useCallback } from "react";
+import { data } from "@/helper/data";
+import TagsInput from "@/components/TagsInput";
+import axios from "axios";
+import { LuLoader2 } from "react-icons/lu";
 
-function page() {
+function Page() {
+  const categories = data[0]?.datas;
+  const [image, setImage] = React.useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [error, setError] = React.useState("");
+  const [projectData, setProjectData] = React.useState({
+    liveUrl: "",
+    githubUrl: "",
+    image: "",
+    stack: [''],
+    category: "",
+  });
+
+
+  const selected = useCallback(
+    (tags: string[]) => {
+      setProjectData((prevData) => ({
+        ...prevData,
+        stack: tags,
+      }));
+    },
+    []
+  );
+
+ 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setProjectData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      setIsSubmitting(true);
+      const formData = new FormData();
+      formData.append("liveUrl", projectData.liveUrl);
+      formData.append("githubUrl", projectData.githubUrl);
+      formData.append("image", image || "");
+      formData.append("stack", JSON.stringify(projectData.stack));
+      formData.append("category", projectData.category);
+
+      if (!projectData.liveUrl || !projectData.githubUrl || !projectData.category || !image || projectData.stack.length === 0) {
+        setError("All fields are required");
+        return;
+      }
+
+      const response = await axios.post("/api/create-project", formData)
+      console.log(response.data)
+    } catch (error: any) {
+      console.error(error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="py-32 flex w-full items-center justify-around">
       <div>
         <h1 className="h1">Create Project</h1>
       </div>
       <div>
-        <div className="">
-          <div className="relative z-10 flex w-full cursor-pointer items-center overflow-hidden rounded-xl border border-slate-800 p-[1.5px]">
+        <div>
+          <div className="relative z-10 flex w-[23rem] cursor-pointer items-center overflow-hidden rounded-xl border border-slate-800 p-[1.5px]">
             <div className="animate-rotate absolute inset-0 h-full w-full rounded-full bg-[conic-gradient(#AC6FFF_20deg,transparent_120deg)]"></div>
             <div className="relative z-20 flex w-full rounded-[0.60rem] bg-n-7 p-2">
-              <div className="mr-2 h-full  flex-1 rounded-lg bg-transparent px-2 py-3 ">
-                <form action="" className="space-y-3 bg-n-7 px-8 py-4">
+              <div className="mr-2 h-full flex-1 rounded-lg bg-transparent px-2 py-3">
+                <form
+                  onSubmit={handleSubmit}
+                  className="space-y-3 bg-n-7 px-4 py-4"
+                >
                   <div>
                     <label
                       htmlFor="liveUrl"
@@ -23,8 +88,11 @@ function page() {
                     <input
                       id="liveUrl"
                       type="text"
-                      placeholder="url"
-                      className="w-full bg-n-8 rounded-lg p-2.5 outline-0 text-sm"
+                      value={projectData.liveUrl}
+                      name="liveUrl"
+                      onChange={handleChange}
+                      placeholder="website url"
+                      className="w-full text-white bg-n-8 rounded-lg p-2.5 outline-0 text-sm"
                     />
                   </div>
                   <div>
@@ -37,6 +105,9 @@ function page() {
                     <input
                       id="githubUrl"
                       type="text"
+                      value={projectData.githubUrl}
+                      name="githubUrl"
+                      onChange={handleChange}
                       placeholder="github url"
                       className="w-full bg-n-8 rounded-lg p-2.5 outline-0 text-sm"
                     />
@@ -50,9 +121,16 @@ function page() {
                     </label>
                     <input
                       id="imageUrl"
-                      type="text"
-                      placeholder="github url"
-                      className="w-full bg-n-8 rounded-lg p-2.5 outline-0 text-sm"
+                      type="file"
+                      name="image"
+                      placeholder="image url"
+                      className="w-full bg-n-8 dark:file:bg-n-6 dark:file:text-white rounded-lg p-2.5 outline-0 text-sm"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setImage(file);
+                        }
+                      }}
                     />
                   </div>
                   <div>
@@ -62,22 +140,37 @@ function page() {
                     >
                       Stack
                     </label>
-                    <input
-                      id="stack"
-                      type="text"
-                      placeholder="stack"
-                      className="w-full bg-n-8 rounded-lg p-2.5 outline-0 text-sm"
-                    />
+                    <TagsInput selected={selected} />
                   </div>
                   <div>
                     <label
-                      htmlFor="stack"
+                      htmlFor="category"
                       className="block font-medium text-sm mb-2"
                     >
                       Category
                     </label>
+                    <select
+                      name="category"
+                      value={projectData.category}
+                      id="category"
+                      onChange={handleChange}
+                      className="dark:bg-n-8 p-2.5 rounded-lg outline-0 text-sm w-full"
+                    >
+                      {categories.map((category: string) => (
+                        <option key={category} value={category}>
+                          {category}
+                        </option>
+                      ))}
+                    </select>
                   </div>
-                  <button className="p-2 text-center bg-purple-600 rounded-sm w-full">Create</button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className={`${isSubmitting ? "bg-purple-300" : 'bg-purple-600' } p-2 text-center hover:bg-purple-500 transition-colors bg-purple-600 rounded-sm w-full flex items-center justify-center gap-x-1 font-medium`}
+                  >
+                    {isSubmitting && <LuLoader2 className="animate-spin"/>}
+                    {isSubmitting ? "Creating..." : "Create"}
+                  </button>
                 </form>
               </div>
             </div>
@@ -88,4 +181,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;
