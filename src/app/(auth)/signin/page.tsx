@@ -109,17 +109,18 @@ function page() {
             </form>
             <span className="text-sm text-center block my-4">Or</span>
             <div className="flex space-x-2">
-              <button
+              {/* <button
                 onClick={() => signIn('github')}
                 className="w-2/4 text-white bg-n-8 border-n-6 border-2 px-5 py-2.5 text-center rounded-lg flex justify-center"
               >
                 <Image src={github} width={20} height={20} alt="github icon" />
-              </button>
+              </button> */}
               <button
                 onClick={() => signIn('google')}
-                className="w-2/4 text-white border-n-6 bg-n-8 border-2 px-5 py-2.5 text-center rounded-lg flex justify-center"
+                className="w-full text-white border-n-6 bg-n-8 border-2 px-5 py-2.5 text-center rounded-lg flex items-center  justify-center"
               >
-                <Image src={google} width={20} height={20} alt="google icon" />
+                {/* <Image src={google} width={20} height={20} alt="google icon" /> */}
+                Sign In with Google
               </button>
             </div>
           </div>

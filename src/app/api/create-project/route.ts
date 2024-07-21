@@ -35,17 +35,27 @@ export async function POST(request: NextRequest){
             status:400
         });
     }
-    const newProject = new ProjectModel({
+    console.log(user._id, liveUrl, githubUrl, imageUrl.url, stack, category);
+
+    const newProject = ProjectModel.create({
         userId: user._id,
         liveUrl,
         githubUrl,
         imageUrl: imageUrl.url,
         stack,
-        likes: 0,
-        projectType: category,
-    });
+        projectType: category
+    })
+    console.log(newProject);
+    // const newProject = new ProjectModel({
+    //     userId: user._id,
+    //     liveUrl,
+    //     githubUrl,
+    //     imageUrl: imageUrl.url,
+    //     stack,
+    //     projectType: category,
+    // });
 
-    await newProject.save();
+
 
     
     return NextResponse.json({message: "Project created successfully"},{

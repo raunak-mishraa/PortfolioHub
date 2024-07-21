@@ -2,8 +2,35 @@ import { FaCaretDown } from "react-icons/fa";
 import { data } from "@/helper/data";
 import { FaAngleDown } from "react-icons/fa";
 import Card from "@/components/Card";
+import dbConnect from "@/lib/dbConnect";
+import ProjectModel from "@/models/project.model";
 
 function page() {
+
+  async function fetchData(page:number) {
+    try {
+      await dbConnect();
+      const pageSize:number = 6;
+      const pageNumber:number = page || 1;
+      const count = await ProjectModel.find().countDocuments();
+      const projects = await ProjectModel.find()
+        .limit(pageSize)
+        .skip((pageNumber - 1) * pageSize);
+      const totalPages = Math.ceil(count / pageSize);
+      if(!projects || projects.length === 0) {
+        throw new Error("No projects found");
+      }
+      return {projects, totalPages};
+        
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+  fetchData(2).then((data) => {
+    console.log(data);
+  });
   return (
     <div className="py-32 px-10 container dark:bg-dot-white/[0.2]">
 

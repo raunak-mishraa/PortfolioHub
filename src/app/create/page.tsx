@@ -15,24 +15,22 @@ function Page() {
     liveUrl: "",
     githubUrl: "",
     image: "",
-    stack: [''],
+    stack: [""],
     category: "Portfolio",
   });
 
   const router = useRouter();
 
-  const selected = useCallback(
-    (tags: string[]) => {
-      setProjectData((prevData) => ({
-        ...prevData,
-        stack: tags,
-      }));
-    },
-    []
-  );
+  const selected = useCallback((tags: string[]) => {
+    setProjectData((prevData) => ({
+      ...prevData,
+      stack: tags,
+    }));
+  }, []);
 
- 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setProjectData((prevData) => ({
       ...prevData,
@@ -51,14 +49,20 @@ function Page() {
       formData.append("stack", JSON.stringify(projectData.stack));
       formData.append("category", projectData.category);
 
-      if (!projectData.liveUrl || !projectData.githubUrl || !projectData.category || !image || projectData.stack.length === 0) {
+      if (
+        !projectData.liveUrl ||
+        !projectData.githubUrl ||
+        !projectData.category ||
+        !image ||
+        projectData.stack.length === 0
+      ) {
         toast.error("All fields are required");
         return;
       }
 
-      const response = await axios.post("/api/create-project", formData)
-      console.log(response.status)
-      if(response.status === 200){
+      const response = await axios.post("/api/create-project", formData);
+      console.log(response.status);
+      if (response.status === 200) {
         toast.success(response.data.message);
         router.push("/developer-profile");
       }
@@ -92,8 +96,9 @@ function Page() {
                       Live Url
                     </label>
                     <input
+                      required
                       id="liveUrl"
-                      type="text"
+                      type="url"
                       value={projectData.liveUrl}
                       name="liveUrl"
                       onChange={handleChange}
@@ -109,8 +114,9 @@ function Page() {
                       Github Url
                     </label>
                     <input
+                      required
                       id="githubUrl"
-                      type="text"
+                      type="url"
                       value={projectData.githubUrl}
                       name="githubUrl"
                       onChange={handleChange}
@@ -126,6 +132,7 @@ function Page() {
                       Image Url
                     </label>
                     <input
+                      required
                       id="imageUrl"
                       type="file"
                       name="image"
@@ -156,6 +163,7 @@ function Page() {
                       Category
                     </label>
                     <select
+                      required
                       name="category"
                       value={projectData.category}
                       id="category"
@@ -172,9 +180,11 @@ function Page() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`${isSubmitting ? "bg-purple-300" : 'bg-purple-600' } p-2 text-center hover:bg-purple-500 transition-colors bg-purple-600 rounded-sm w-full flex items-center justify-center gap-x-1 font-medium`}
+                    className={`${
+                      isSubmitting ? "bg-purple-300" : "bg-purple-600"
+                    } p-2 text-center hover:bg-purple-500 transition-colors bg-purple-600 rounded-sm w-full flex items-center justify-center gap-x-1 font-medium`}
                   >
-                    {isSubmitting && <LuLoader2 className="animate-spin"/>}
+                    {isSubmitting && <LuLoader2 className="animate-spin" />}
                     {isSubmitting ? "Creating..." : "Create"}
                   </button>
                 </form>
