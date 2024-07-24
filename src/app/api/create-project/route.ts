@@ -4,10 +4,13 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/options";
 import { User } from "next-auth";
 import ProjectModel from "@/models/project.model";
+import dbConnect from "@/lib/dbConnect";
+// import mongoose from "mongoose";
 
 export async function POST(request: NextRequest){
+    await dbConnect();
     const session = await getServerSession(authOptions);
-    const user:User = session?.user as User;
+    const user = session?.user as User;
 
     if (!session || !session.user) {
         return NextResponse.json(
@@ -36,27 +39,17 @@ export async function POST(request: NextRequest){
         });
     }
     console.log(user._id, liveUrl, githubUrl, imageUrl.url, stack, category);
-
-    const newProject = ProjectModel.create({
+    // console.log(typeof newUser);
+    const newProject = await ProjectModel.create({
         userId: user._id,
         liveUrl,
         githubUrl,
         imageUrl: imageUrl.url,
-        stack,
+        stack:JSON.parse(stack.toString()),
         projectType: category
     })
-    console.log(newProject);
-    // const newProject = new ProjectModel({
-    //     userId: user._id,
-    //     liveUrl,
-    //     githubUrl,
-    //     imageUrl: imageUrl.url,
-    //     stack,
-    //     projectType: category,
-    // });
-
-
-
+    // const useid = newProject?.userId;
+    // console.log(typeof useid);
     
     return NextResponse.json({message: "Project created successfully"},{
         status:200

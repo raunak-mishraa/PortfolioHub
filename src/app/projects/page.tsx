@@ -1,36 +1,39 @@
+"use client";
 import { FaCaretDown } from "react-icons/fa";
 import { data } from "@/helper/data";
 import { FaAngleDown } from "react-icons/fa";
 import Card from "@/components/Card";
-import dbConnect from "@/lib/dbConnect";
-import ProjectModel from "@/models/project.model";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Pagination from "@/components/Pagination";
 
-function page() {
-
-  async function fetchData(page:number) {
-    try {
-      await dbConnect();
-      const pageSize:number = 6;
-      const pageNumber:number = page || 1;
-      const count = await ProjectModel.find().countDocuments();
-      const projects = await ProjectModel.find()
-        .limit(pageSize)
-        .skip((pageNumber - 1) * pageSize);
-      const totalPages = Math.ceil(count / pageSize);
-      if(!projects || projects.length === 0) {
-        throw new Error("No projects found");
+function page({ searchParams }: { searchParams: any }) {
+  // ?category=${category}
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [projects, setProjects] = useState<any[]>([]);
+  // const [category, setCategory] = useState<string>("");
+  useEffect(()=>{
+    const page = searchParams.page || 1;
+    console.log(page);
+    // setPage(searchParams.page);
+    async function fetchData() {
+      try {
+        console.log(page);
+        const result = await axios.get(`/api/get-projects?page=${page}`);
+        console.log(result.data);
+        setTotalPages(result.data.totalPages);
+        setProjects(result.data.projects);
+      } catch (error) {
+        console.log(error);
       }
-      return {projects, totalPages};
-        
-    } catch (error) {
-      console.log(error);
-      
     }
-  }
+    fetchData();
+  }, []);
+  // console.log(category);      
+  
 
-  fetchData(2).then((data) => {
-    console.log(data);
-  });
+
+
   return (
     <div className="py-32 px-10 container dark:bg-dot-white/[0.2]">
 
@@ -51,6 +54,7 @@ function page() {
                   {category.datas.map((data, index) => (
                     <span
                       key={index}
+                      // onClick={()=>setCategory(data)}
                       className="bg-n-7 text-sm p-2.5 rounded-md hover:bg-n-6 transition-colors"
                     >
                       {data}
@@ -79,9 +83,21 @@ function page() {
         </div>
       </div>
 
-      {/* Project card */}
-      <Card/>
-    </div>
+        {/* Project card  */}
+       <div>
+          {projects.length < 1 ?
+           (<span className="text-xl block text-center font-semibold">No projects found</span>) 
+           : <div className="grid grid-cols-3 gap-10 mt-10">
+            {projects.map((project, index) => (
+              <Card key={index} project={project} />
+            ))}
+          </div>}
+       </div>
+        
+        {/* pagination */}
+        <Pagination totalPages={totalPages} currentPage={parseInt(searchParams.page)}/> 
+
+      </div>
   );
 }
 

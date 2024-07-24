@@ -88,7 +88,7 @@ export const authOptions: NextAuthOptions = {
       if (account.provider === 'google' || account.provider === 'github') {
         try {
           const { email } = user;
-          // console.log(user, "user");
+          console.log(user, "user");
           await dbConnect();
           const dbUser = await UserModel.findOne({ email });
           

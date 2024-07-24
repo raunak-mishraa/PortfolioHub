@@ -1,13 +1,12 @@
 import { useRef, useState } from "react";
 import { FiLock } from "react-icons/fi";
 import { motion } from "framer-motion";
-
+import { useRouter } from "next/navigation";
 const HomeButton = () => {
   return (
       <EncryptButton />
   );
 };
-
 const TARGET_TEXT = "Browse Projects";
 const CYCLES_PER_LETTER = 2;
 const SHUFFLE_TIME = 50;
@@ -15,6 +14,7 @@ const SHUFFLE_TIME = 50;
 const CHARS = "!@#$%^&*():{};|,.<>/?";
 
 const EncryptButton = () => {
+  const router = useRouter();
   const intervalRef = useRef<null | NodeJS.Timeout>(null);
 
   const [text, setText] = useState(TARGET_TEXT);
@@ -59,6 +59,7 @@ const EncryptButton = () => {
       whileTap={{
         scale: 0.975,
       }}
+      onClick={()=> router.push('/projects')}
       onMouseEnter={scramble}
       onMouseLeave={stopScramble}
       className="group relative overflow-hidden rounded-lg border-[1px] border-neutral-500 bg-white text-n-8 hover:bg-n-7 px-4 py-2 font-mono font-medium uppercase transition-colors hover:text-indigo-300"

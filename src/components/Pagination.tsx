@@ -1,9 +1,54 @@
-import React from 'react'
+import Link from "next/link";
+import React from "react";
 
-function Pagination() {
+function Pagination({
+  totalPages,
+  currentPage,
+}: {
+  totalPages: number;
+  currentPage: number;
+}) {
+  console.log(totalPages, currentPage);
   return (
-    <div>Pagination</div>
-  )
+    <div className="flex justify-center mt-10">
+      <div className="flex gap-2">
+        <Link
+          href={currentPage === 1 ? "" : `/projects?page=${currentPage - 1}`}
+        >
+          <button 
+          className={"bg-n-7 text-white px-4 py-2 rounded-md"}
+          disabled={currentPage === 1}
+          >
+            Prev
+          </button>
+        </Link>
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            className={`${
+              currentPage === index + 1 ? "bg-[#AC6AFF]" : "bg-n-7"
+            } text-white px-4 py-2 rounded-md`}
+          >
+            {index + 1}
+          </button>
+        ))}
+        <Link
+          href={
+            currentPage === totalPages
+              ? ""
+              : `/projects?page=${currentPage + 1}`
+          }
+        >
+          <button 
+          className="bg-n-7 text-white px-4 py-2 rounded-md"
+          disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </Link>
+      </div>
+    </div>
+  );
 }
 
-export default Pagination
+export default Pagination;

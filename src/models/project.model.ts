@@ -1,7 +1,7 @@
 import mongoose, {Schema, Document} from "mongoose";
 
-interface Project extends Document {
-    userId: string;
+export interface Project extends Document {
+    userId: Schema.Types.ObjectId; 
     liveUrl: string;
     githubUrl: string;
     imageUrl: string;
@@ -12,8 +12,8 @@ interface Project extends Document {
 
 const projectSchema:Schema<Project> = new Schema({
     userId:{
-        type: String,
-        required: true,
+        type: Schema.Types.ObjectId,
+        ref: "User",
     },
     liveUrl:{
         type: String,
@@ -39,7 +39,7 @@ const projectSchema:Schema<Project> = new Schema({
         type: String,
         required: true,
     }
-});
+}, {timestamps: true});
 
 const ProjectModel = (mongoose.models.Project as mongoose.Model<Project>) || mongoose.model<Project>("Project", projectSchema);
 export default ProjectModel;

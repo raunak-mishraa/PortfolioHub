@@ -77,7 +77,7 @@ const config: Config = {
           5: "#3F3A52",
           6: "#252134",
           7: "#15131D",
-          8: "#05050A",
+          8: "#0E0C15",
           9: "#474060",
           10: "#43435C",
           11: "#1B1B2E",
@@ -190,3 +190,5 @@ const config: Config = {
 export default config;
 
 // 0E0C15
+// 2 05050A
+// 05050A

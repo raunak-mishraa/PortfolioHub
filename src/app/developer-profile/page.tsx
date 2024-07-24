@@ -6,11 +6,11 @@ import profie_line from '../../../public/profile_line.svg'
 import { FaLinkedinIn } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { useSession } from 'next-auth/react';
-
+import avatar from '../../../public/01.png'
 function page() {
   const { data: session, status } = useSession();
   console.log(session)
-  const avatar = session?.user.image ?? test;
+  // const avatar = session?.user.image ?? test;
   return (
     <div className='py-32 px-10 container'>
 

@@ -48,7 +48,7 @@ const userSchema: Schema<User> = new Schema({
     isVerified:{
         type: Boolean,
         default: false,
-    }
+    },
 });
 
 const UserModel = (mongoose.models.User as mongoose.Model<User>) || mongoose.model<User>("User", userSchema);
