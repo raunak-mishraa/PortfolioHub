@@ -1,30 +1,47 @@
 import Image from "next/image";
 import test from "./test.png";
-import { GoHeart } from "react-icons/go";
+import { GoHeart, GoHeartFill } from "react-icons/go";
 import { LuBookmark } from "react-icons/lu";
 import Link from "next/link";
 import avatar from '../../public/01.png'
+import { Project } from "@/types/project";
+import { useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
 
-function Card({project}:{project:any}) {
-  const post = {
-    user: {
-      avatar: "https://avatars.githubusercontent.com/u/47231161?v=4",
-      name: "Raunak Mishra",
-      role: "Full stack developer",
-    },
-    liveUrl: "https://codescroll.vercel.app",
-    githubUrl: "",
-    category: "Portfolio",
-    technologies: [
-      "React",
-      "Tailwind",
-      "Next.js",
-      "TypeScript",
-      "Node.js",
-      "Express.js",
-      "MongoDB",
-    ],
-  };
+function Card({
+  project,
+} :{
+  project:Project
+}) {
+    const [liked, setLiked] = useState<boolean>(false);
+    const [saved, setSaved] = useState<boolean>(false)
+
+    const handleLike = async (id:any) => {
+      console.log("like");
+      setLiked(!liked);
+      try {
+        console.log(id, liked);
+        const newLike = !liked;
+        console.log(newLike);
+        const data = await axios.put('/api/like', {id, liked: newLike});
+        toast.success(data.data.message);
+      } catch (error:any) {
+        console.log(error);
+        toast.error(error.response.data.error);
+      }
+    };
+
+    const handleSave = async (pid:any) =>{
+      const save = !saved;
+      // alert(pid)
+      try {
+        const id = pid;
+        const savedData = await axios.put('/api/save', {id, save})
+      } catch (error) {
+        
+      }
+    }
 
   return (
     <div className="relative rounded-lg bg-[#05050A] w-96 border border-[#272A3C] overflow-hidden group">
@@ -90,10 +107,14 @@ function Card({project}:{project:any}) {
         </div>
         <div className="my-6 flex justify-between items-center">
           <div className="flex items-center gap-x-1.5">
-           <GoHeart className="w-5 h-5 text-[#797D9B] hover:text-color-6 transition-all duration-300  "/>
+          <div onClick={() => handleLike(project?._id)} >
+            {liked 
+             ? <GoHeartFill className="cursor-pointer w-5 h-5 text-color-6"/>
+             : <GoHeart className="cursor-pointer w-5 h-5 text-[#797D9B] hover:text-color-6 transition-all duration-300 "/>}
+          </div>
            <span className="text-sm text-[#797D9B]">{project?.likes}</span>
           </div>
-          <div>
+          <div onClick={()=>handleSave(project?._id)}>
             <LuBookmark className="w-5 h-5 text-[#797D9B] transition-all duration-300 hover:text-[#5A67D8]" />
           </div>
         </div>

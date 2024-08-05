@@ -6,7 +6,7 @@ import axios from "axios";
 import { LuLoader2 } from "react-icons/lu";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-
+import { DataItem } from "@/helper/data";
 function Page() {
   const categories = data[0]?.datas;
   const [image, setImage] = React.useState<File | null>(null);
@@ -170,9 +170,9 @@ function Page() {
                       onChange={handleChange}
                       className="dark:bg-n-8 p-2.5 rounded-lg outline-0 text-sm w-full"
                     >
-                      {categories.map((category: string) => (
-                        <option key={category} value={category}>
-                          {category}
+                      {categories.map((category: DataItem) => (
+                        <option key={category.title} value={category.slug}>
+                          {category.title}
                         </option>
                       ))}
                     </select>

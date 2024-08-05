@@ -1,45 +1,71 @@
-import mongoose, {Schema, Document} from "mongoose";
+import mongoose, { Schema, Document } from 'mongoose';
+
+// export interface Like extends Document {
+//     userId: mongoose.Types.ObjectId;
+// }
+
+// const LikeSchema: Schema<Like> = new Schema({
+//     userId: {
+//         type: Schema.Types.ObjectId,
+//         ref: 'User',
+//     },
+// }, { timestamps: true });
+// const LikeSchema = new Schema({
+//     userId: {
+//         type: Schema.Types.ObjectId,
+//         ref: 'User',
+//     },
+// });
+
 
 export interface Project extends Document {
-    userId: Schema.Types.ObjectId; 
+    userId: mongoose.Types.ObjectId;
     liveUrl: string;
     githubUrl: string;
     imageUrl: string;
     stack: string[];
     likes: number;
     projectType: string;
+    likesId: mongoose.Types.ObjectId[];
 }
 
-const projectSchema:Schema<Project> = new Schema({
-    userId:{
+const projectSchema: Schema<Project> = new Schema({
+    userId: {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: 'User',
+        required: true,
     },
-    liveUrl:{
+    liveUrl: {
         type: String,
         required: [true, 'Live URL is required'],
     },
-    githubUrl:{
+    githubUrl: {
         type: String,
         required: [true, 'Github URL is required'],
     },
-    imageUrl:{
+    imageUrl: {
         type: String,
         required: [true, 'Image URL is required'],
     },
-    stack:{
+    stack: {
         type: [String],
         required: true,
     },
-    likes:{
+    likes: {
         type: Number,
         default: 0,
     },
-    projectType:{
+    projectType: {
         type: String,
         required: true,
-    }
-}, {timestamps: true});
+    },
+    likesId: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+        },
+    ],
+}, { timestamps: true });
 
-const ProjectModel = (mongoose.models.Project as mongoose.Model<Project>) || mongoose.model<Project>("Project", projectSchema);
+const ProjectModel = (mongoose.models.Project as mongoose.Model<Project>) || mongoose.model<Project>('Project', projectSchema);
 export default ProjectModel;

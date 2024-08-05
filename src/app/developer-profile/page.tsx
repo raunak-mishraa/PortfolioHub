@@ -28,7 +28,7 @@ function page() {
           <div className='m-1'>
             <Image src={profie_line} alt='vector' className='animate-pulse'/>
           </div>
-          <div>{session?.user.username}</div>
+          <div className='uppercase'>{session?.user.username}</div>
           <div className='flex gap-x-12'>
             <div className='w-10 h-10 border flex items-center justify-center rounded-full border-n-5'>
             <FaLinkedinIn className='text-[#757185]'/>

@@ -23,14 +23,16 @@ function Pagination({
           </button>
         </Link>
         {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            className={`${
-              currentPage === index + 1 ? "bg-[#AC6AFF]" : "bg-n-7"
-            } text-white px-4 py-2 rounded-md`}
-          >
-            {index + 1}
-          </button>
+          <Link  key={index} href={`/projects?page=${index + 1}`}>
+            <button
+             
+              className={`${
+                currentPage === index + 1 ? "bg-[#AC6AFF]" : "bg-n-7"
+              } text-white px-4 py-2 rounded-md`}
+            >
+              {index + 1}
+            </button>
+          </Link>
         ))}
         <Link
           href={
@@ -51,4 +53,4 @@ function Pagination({
   );
 }
 
-export default Pagination;
+export default React.memo(Pagination);

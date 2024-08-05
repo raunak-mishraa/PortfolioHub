@@ -1,4 +1,26 @@
 import mongoose,{Schema, Document} from "mongoose";
+import { Project } from "./project.model";
+export interface Message extends Document {
+    name: string;
+    content: string;
+    createdAt: Date;
+  }
+
+  const MessageSchema: Schema<Message> = new mongoose.Schema({
+    name: {
+      type: String,
+      required: true,
+    },
+    content: {
+      type: String,
+      required: true,
+    },
+    createdAt: {
+      type: Date,
+      required: true,
+      default: Date.now,
+    },
+  });
 
 interface User extends Document {
     fullName: string;
@@ -8,6 +30,10 @@ interface User extends Document {
     verifyCode: string;
     verifyCodeExpiry: Date;
     isVerified: boolean;
+    linkedin: string;
+    github: string;
+    savedProjects: Project[];
+    messages: Message[];
 }
 
 const userSchema: Schema<User> = new Schema({
@@ -49,6 +75,19 @@ const userSchema: Schema<User> = new Schema({
         type: Boolean,
         default: false,
     },
+    linkedin:{
+        type: String,
+        trim: true,
+    },
+    github:{
+        type: String,
+        trim: true,
+    },
+    savedProjects: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Project'
+    }],
+    messages: [MessageSchema]
 });
 
 const UserModel = (mongoose.models.User as mongoose.Model<User>) || mongoose.model<User>("User", userSchema);
